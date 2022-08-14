@@ -64,14 +64,14 @@ jobs:
 
       - name: Download virions
         if: steps.libraries-file.outputs.files_exists == 'true'
-        run: ./bin/php7/bin/php -r 'foreach(${{ steps.libraries.outputs.data }} as $lib){ exec("wget $lib"); echo "\nDownloaded virion " . basename($lib); }'
+        run: ./bin/php7/bin/php -dphar.readonly=1 -r 'foreach(${{ steps.libraries.outputs.data }} as $lib){ exec("wget $lib"); echo "\nDownloaded virion " . basename($lib); }'
 
       - name: Inject virions
         if: steps.libraries-file.outputs.files_exists == 'true'
-        run: ./bin/php7/bin/php -r 'foreach(${{ steps.libraries.outputs.data }} as $lib){ exec("./bin/php7/bin/php " . basename($lib) . " target/${{ steps.plugin-name.outputs.data }}.phar"); echo "\nInjected virion " . basename($lib); }'
+        run: ./bin/php7/bin/php -dphar.readonly=1 -r 'foreach(${{ steps.libraries.outputs.data }} as $lib){ exec("./bin/php7/bin/php " . basename($lib) . " target/${{ steps.plugin-name.outputs.data }}.phar"); echo "\nInjected virion " . basename($lib); }'
 
       - name: Compress phar
-        run: ./bin/php7/bin/php -r '(new \Phar("./target/${{ steps.plugin-name.outputs.data }}.phar"))->compressFiles(\Phar::GZ); echo "\nFinished compression";'
+        run: ./bin/php7/bin/php -dphar.readonly=1 -r '(new \Phar("./target/${{ steps.plugin-name.outputs.data }}.phar"))->compressFiles(\Phar::GZ); echo "\nFinished compression";'
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
