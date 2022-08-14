@@ -21,6 +21,7 @@ jobs:
           repo: NetherGamesMC/php-build-scripts
           version: "tags/8.0"
           token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Unpack PHP Release
         run: unzip Linux.zip && tar -xzvf PHP_Linux-x86_64.tar.gz
 
@@ -45,7 +46,7 @@ jobs:
         run: wget https://gist.githubusercontent.com/brokiem/3a407df6372ed1410cfb38cf99762a3f/raw/3f7e65b169a13bff5f2ec91669f9b474cf25a6cc/ConsoleScript.php
 
       - name: Build plugin
-        run: ./bin/php7/bin/php ConsoleScript.php --make / --relative plugin --out target/${{ steps.plugin-name.outputs.data }}.phar
+        run: ./bin/php7/bin/php -dphar.readonly=0 ConsoleScript.php --make / --relative plugin --out target/${{ steps.plugin-name.outputs.data }}.phar
 
       - name: Check libraries file
         id: libraries-file
